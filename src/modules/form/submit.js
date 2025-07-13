@@ -1,7 +1,10 @@
 import dayjs from "dayjs";
+import { scheduleNew } from "../../services/schedule-new";
+import { schedulesDay } from "../schedules/load";
+
 const form = document.querySelector("form");
 const selectedDate = document.getElementById("date");
-const clienteName = document.getElementById("client");
+const clientName = document.getElementById("client");
 
 //Data atual para o input
 const inputToday = dayjs(new Date()).format("YYYY-MM-DD");
@@ -12,12 +15,12 @@ selectedDate.value = inputToday;
 //Definir a data minima como atual
 selectedDate.min = inputToday;
 
-form.onsubmit = (event) => {
+form.onsubmit = async (event) => {
     event.preventDefault();
 
     try {
         //Recuperando o nome do cliente
-        const name = clienteName.value.trim();
+        const name = clientName.value.trim();
 
         if(!name) {
             return alert("Informe o nome do cliente!");
@@ -45,6 +48,14 @@ form.onsubmit = (event) => {
             name,
             when
         };
+
+        await scheduleNew(objHors);
+
+        //Recarregar os agendamentos
+        await schedulesDay();
+
+        //Limpa o input de nome
+        clientName.value = "";
     }catch(error){
         alert("Não foi possível realizar o agendamento.");
         console.log(error);
