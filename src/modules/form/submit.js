@@ -41,7 +41,7 @@ form.onsubmit = async (event) => {
         const when = dayjs(selectedDate.value).add(hour, "hour");
 
         //Gerar um ID
-        const id = new Date().getTime();
+        const id = new Date().getTime().toString();
 
         const objHors = {
             id,
